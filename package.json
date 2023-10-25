@@ -1,0 +1,20 @@
+{
+  "name": "xf-registration",
+  "version": "1.0.0",
+  "description": "Xf- Registration (firstly assume X , and X can be anything)",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "author": "Rahul.Xf",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2",
+    "mongodb": "^6.2.0",
+    "mongoose": "^7.6.3",
+    "nodemon": "^3.0.1",
+    "validate": "^5.2.0",
+    "validator": "^13.11.0"
+  }
+}
