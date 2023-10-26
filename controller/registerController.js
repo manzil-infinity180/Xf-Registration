@@ -5,6 +5,7 @@ exports.getAllRegisterd = async(req,res,next)=>{
     const allRegistee = await Register.find();
     res.status(200).json({
       status:"Success",
+      result : allRegistee.length,
       data:{
         allRegistee
       }
