@@ -4,6 +4,8 @@ const registerController = require("./../controller/registerController");
 
 router.get('/',registerController.getAllRegisterd);
 router.post('/register',registerController.getRegistered);
+router.get('/search',registerController.searchPerson);
+router.get('/skill',registerController.searchBySkill);
 
 
 module.exports=router;

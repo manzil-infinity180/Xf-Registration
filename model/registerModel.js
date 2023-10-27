@@ -52,9 +52,23 @@ const registerSchema = new mongoose.Schema({
     type:String
   },
   createdAt:{
-    type:Date,
+    type:String,
     default : Date.now()
+  },
+  OneTopSkill:{
+    type:String,
+    required:[true,'Required Field to Find Similar skill people']
   }
+  
+});
+
+
+registerSchema.pre('save',function(next){
+  const newDate = new Date();
+  const date = newDate.getFullYear()+"-"+ newDate.getMonth()+"-"+ newDate.getDate();
+  console.log(date);
+  this.createdAt = date;
+  next();
 })
 
 // Middleware for time to change like 25 August 2023 
@@ -103,6 +117,11 @@ registerSchema.pre('save',function(next){
   console.log(this.phoneNumber);
   next();
 
+});
+registerSchema.pre('save',function(next){
+  const skillLowerCase = this.OneTopSkill.toLowerCase();
+  this.OneTopSkill = skillLowerCase;
+  next();
 })
 
 const Register = mongoose.model('Register',registerSchema);

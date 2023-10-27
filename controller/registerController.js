@@ -2,6 +2,7 @@ const Register = require("./../model/registerModel");
 
 exports.getAllRegisterd = async(req,res,next)=>{
   try{
+    console.log(req.query.search);
     const allRegistee = await Register.find();
     res.status(200).json({
       status:"Success",
@@ -24,6 +25,7 @@ exports.getAllRegisterd = async(req,res,next)=>{
 }
 exports.getRegistered = async(req,res,next)=>{
   try{
+    
     console.log(req.body);
     const registeredUser = await Register.create(req.body);
     console.log("New Registration \n "+registeredUser);
@@ -44,5 +46,43 @@ exports.getRegistered = async(req,res,next)=>{
       }
     })
   }
+}
 
+exports.searchPerson = async(req,res,next)=>{
+  try{
+    const searchedObj = await Register.find({$or : [{ username : req.query.username}, {name: req.query.name},
+    {PostalCode: req.body.PostalCode},{college:req.query.college}]});
+    console.log(searchedObj);
+    res.status(200).json({
+      status:"Success",
+      data:{
+        searchedObj
+      }
+    })
+
+  }catch(err){
+    res.status(400).json({
+      status:"failed"
+    })
+
+  }
+}
+exports.searchBySkill = async(req,res,next)=>{
+  try{
+    console.log(req.query.skill);
+    const searchedObj = await Register.find({OneTopSkill:req.query.skill});
+    console.log(searchedObj);
+    res.status(200).json({
+      status:"Success",
+      data:{
+        searchedObj
+      }
+    })
+
+  }catch(err){
+    res.status(400).json({
+      status:"failed"
+    })
+
+  }
 }
