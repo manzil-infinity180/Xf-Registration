@@ -58,10 +58,25 @@ const registerSchema = new mongoose.Schema({
   OneTopSkill:{
     type:String,
     required:[true,'Required Field to Find Similar skill people']
+  },
+  // GeoJson (Mongoose)
+  location:{
+    type:{
+      type:String, // Don't do `{ location: { type: String } }` --- this will not going to work 
+      default:"Point",   // 'location.type' must be 'Point'
+      enum:['Point'],
+      required:[true,"Wrong Valued type, do like this location: { type: 'Point', coordinates: [-104.9903, 39.7392] }"]
+    },
+    coordinates:{
+      type:[Number],
+      required:[true,"Wrong Valued type . do like this { type: 'Point', coordinates: [longitude, latitude] }"]
+    }
   }
   
 });
 
+// Indexes in location 
+registerSchema.index({location:'2dsphere'}); 
 
 registerSchema.pre('save',function(next){
   const newDate = new Date();

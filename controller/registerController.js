@@ -86,3 +86,56 @@ exports.searchBySkill = async(req,res,next)=>{
 
   }
 }
+exports.findUserWithinRadius = async(req,res,next)=>{
+  try{
+
+    const longitude = req.query.long;
+    const latitude = req.query.lat;
+    const radius = req.query.radius;
+    console.log(req.query.radius,longitude,latitude);
+    const options = {type:'Point',coordinates:[longitude,latitude]};
+    // const radius = req.query.radius;
+    const UserWithin = await Register.find({location:{
+      $near : {
+        $geometry:options,
+        $maxDistance:radius 
+        
+      } }});
+      res.status(200).json({
+        status:'Success',
+        length:UserWithin.length,
+        data:{
+          UserWithin
+        }
+      })
+    }catch(err){
+      res.status(400).json({
+        status:'Failed',
+        err:err.message
+      })
+    }
+}
+exports.updateMyDetail = async(req,res,next)=>{
+  try{
+  console.log(req.body);
+  console.log(req.params.id);
+  const registee = await Register.findByIdAndUpdate(req.params.id,req.body,{
+    new: true,
+      runValidators: true
+  });
+  if(!registee){
+    throw new Error("No User with this id found.Please enter valid id");
+  }
+  res.status(200).json({
+    status:'Success',
+    data:{
+      registee
+    }
+  });
+}catch(err){
+  res.status(404).json({
+    status:'Failed',
+    err: err.message
+  })
+}
+}
