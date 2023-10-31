@@ -7,7 +7,9 @@ router.post('/register',registerController.getRegistered);
 router.get('/search',registerController.searchPerson);
 router.get('/skill',registerController.searchBySkill);
 router.get('/find-user-within-radius',registerController.findUserWithinRadius);
-router.patch('/update-my-detail/:id',registerController.updateMyDetail)
+router.patch('/update-my-detail/:id',registerController.updateMyDetail);
+router.patch('/updatePhoneNumber/:id',registerController.updatePhoneNumber);
+router.patch('/updateUsername/:id',registerController.updateUsername);
 
 
 module.exports=router;

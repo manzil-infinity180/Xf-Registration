@@ -1,5 +1,5 @@
 const Register = require("./../model/registerModel");
-
+const CryptoJs = require("crypto-js");
 exports.getAllRegisterd = async(req,res,next)=>{
   try{
     console.log(req.query.search);
@@ -119,6 +119,9 @@ exports.updateMyDetail = async(req,res,next)=>{
   try{
   console.log(req.body);
   console.log(req.params.id);
+  if(req.body.username || req.body.phoneNumber){
+    throw new Error('You can not update username(/updateUsername) & phoneNumber (/updatePhoneNumber) here, head over to following Url endpoints');
+  }
   const registee = await Register.findByIdAndUpdate(req.params.id,req.body,{
     new: true,
       runValidators: true
@@ -138,4 +141,85 @@ exports.updateMyDetail = async(req,res,next)=>{
     err: err.message
   })
 }
+}
+
+// Problem aa raha hai ----
+exports.updatePhoneNumber=async(req,res,next)=>{
+  try{
+    console.log(req.body);
+    const user = await Register.findById(req.params.id);
+    // console.log(user);
+    if(!user){
+      throw new Error("No user found , check your _id");
+    }
+    console.log("Previous pass: "+req.body.previousPhoneNumber);
+    if(!req.body.previousPhoneNumber){
+      throw new Error("Firstly entered your Previous phone Number (previousPhoneNumber:889988xxxx)");
+    }
+    // const enteredPhoneNumber = req.body.previousPhoneNumber;
+    const clipherText = user.phoneNumber; // phone number from database
+   console.log("userPhone: "+clipherText);
+    const bytes = CryptoJs.AES.decrypt(clipherText,process.env.CRYPTO_SECRET);
+    const originalPhoneNumber = +bytes.toString(CryptoJs.enc.Utf8);
+    // console.log(user.phoneNumber);
+    console.log("OriginalPass: "+originalPhoneNumber);
+    if(req.body.previousPhoneNumber !== originalPhoneNumber){
+      throw new Error("Your entered phone Number is not same with our database data,Entered correct Phone Number")
+    }
+    const encryptedPhoneNumber = CryptoJs.AES.encrypt(req.body.phoneNumber,process.env.CRYPTO_SECRET).toString();
+    // user.phoneNumber = req.body.phoneNumber;
+    // console.log(user.phoneNumber);
+    // user.save();
+    // console.log("after save : "+ user.phoneNumber);
+    const userUpdated = await Register.findByIdAndUpdate(user.id,{phoneNumber:encryptedPhoneNumber},{
+      new:true,
+      runValidators:true
+    });
+    
+
+   res.status(200).json({
+    status:"Success",
+    data:{
+      userUpdated
+    }
+    
+   })
+  }catch(err){
+    res.status(404).json({
+      status:"failed",
+      err:err.message
+    })
+
+  }
+}
+exports.updateUsername = async (req,res,next)=>{
+  try{
+
+    const user = await Register.findById(req.params.id);
+    const lastUpdate = user.lastUpdate;
+    const date = new Date();
+    console.log(date.getTime()-lastUpdate.getTime() - 5*1*1*1000 + "  "+ date.getTime()+"  "+lastUpdate.getTime());
+    if(((date.getTime()-lastUpdate.getTime()) - 24 *60 * 60 * 1000) <=0){
+      throw new Error("User can change their username onces in 24 hour");
+    }
+    const updatedUser = await Register.findByIdAndUpdate(user.id,{username: req.body.username,
+    lastUpdate:new Date()},{
+      new:true,
+      runValidators:true
+    });
+    
+    
+    console.log(user.username,user.lastUpdate);
+    res.status(200).json({
+      status:"Success",
+      data:{
+        updatedUser
+      }
+    })
+  }catch(err){
+    res.status(404).json({
+      status:"failed",
+      err:err.message
+    })
+  }
 }

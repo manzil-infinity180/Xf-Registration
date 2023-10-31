@@ -1,0 +1,36 @@
+ [{
+  "name":"Rahul Vishwakarma",
+  "age":19,
+  "email":"rahul@gmail.com",
+  "college":"MMMUT Gorakhpur",
+  "address":"Gorakhpur,UttarPradesh",
+  "PostalCode":273410,
+  "position":"Backend Dev",
+  "image":"user009.jpg",
+  "bgimg":"bguser009.jpg",
+  "username":"rahulvs2809",
+  "phoneNumber":8149132874,
+  "location": { "type" : "Point",
+    "coordinates": [93.185654, 26.0739] },
+  "OneTopSkill":"Nodejs"
+},
+{
+  "name":"Raj Vishwakarma",
+  "age":19,
+  "email":"raj123@gmail.com",
+  "college":"IIT Gorakhpur",
+  "address":"Gorakhpur,UttarPradesh",
+  "PostalCode":273410,
+  "position":"Frontend Dev",
+  "image":"user011.jpg",
+  "bgimg":"bguser019.jpg",
+  "username":"rajvish123",
+  "phoneNumber":8149132874,
+  "location": { "type" : "Point",
+    "coordinates": [93.185654, 26.0739] },
+  "OneTopSkill":"Nodejs"
+
+
+
+}
+]

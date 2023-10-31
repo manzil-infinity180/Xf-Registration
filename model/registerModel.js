@@ -71,6 +71,10 @@ const registerSchema = new mongoose.Schema({
       type:[Number],
       required:[true,"Wrong Valued type . do like this { type: 'Point', coordinates: [longitude, latitude] }"]
     }
+  },
+  lastUpdate:{
+    type:Date,
+    default: Date.now()
   }
   
 });
@@ -82,6 +86,8 @@ registerSchema.pre('save',function(next){
   const newDate = new Date();
   const date = newDate.getFullYear()+"-"+ newDate.getMonth()+"-"+ newDate.getDate();
   console.log(date);
+  const date1 = newDate.getFullYear()+"-"+ newDate.getMonth()+"-"+ newDate.getDate();
+  
   this.createdAt = date;
   next();
 })
