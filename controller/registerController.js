@@ -1,5 +1,6 @@
 const Register = require("./../model/registerModel");
 const CryptoJs = require("crypto-js");
+const multer = require("multer");
 exports.getAllRegisterd = async(req,res,next)=>{
   try{
     console.log(req.query.search);
@@ -115,33 +116,7 @@ exports.findUserWithinRadius = async(req,res,next)=>{
       })
     }
 }
-exports.updateMyDetail = async(req,res,next)=>{
-  try{
-  console.log(req.body);
-  console.log(req.params.id);
-  if(req.body.username || req.body.phoneNumber){
-    throw new Error('You can not update username(/updateUsername) & phoneNumber (/updatePhoneNumber) here, head over to following Url endpoints');
-  }
-  const registee = await Register.findByIdAndUpdate(req.params.id,req.body,{
-    new: true,
-      runValidators: true
-  });
-  if(!registee){
-    throw new Error("No User with this id found.Please enter valid id");
-  }
-  res.status(200).json({
-    status:'Success',
-    data:{
-      registee
-    }
-  });
-}catch(err){
-  res.status(404).json({
-    status:'Failed',
-    err: err.message
-  })
-}
-}
+
 
 // Problem aa raha hai ----
 exports.updatePhoneNumber=async(req,res,next)=>{
@@ -223,3 +198,102 @@ exports.updateUsername = async (req,res,next)=>{
     })
   }
 }
+// Uploading image using multer npm package 
+
+const diskStorage = multer.diskStorage({
+  destination:(req,file,cb)=>{
+    cb(null,'public/img');
+  },
+  filename:(req,file,cb)=>{
+    // console.log(file);
+    const extension = file.mimetype.split('/')[1];
+    if(file.fieldname==='bgimg'){
+      cb(null,`bgimg-${Date.now()}.${extension}`);
+    }else{
+
+      cb(null,`user-${Date.now()}.${extension}`);
+    }
+  }
+});
+const multerFile = (req,file,cb)=>{
+  if(file.mimetype.startsWith('image')){
+    cb(null,true);
+  }else{
+    cb(null,false);
+  }
+}
+
+const upload = multer({storage: diskStorage});
+
+exports.uploadUserPhoto = upload.single('photo');
+exports.uploadBackgroundPhoto = upload.single('bgimg');
+
+exports.updateMe = async(req,res,next)=>{
+  try{
+
+    console.log(req.file);
+    console.log(req.body);
+    const name = req.file.fieldname;
+    let x;
+    if(req.file.fieldname==='photo'){
+       x =  {photo:req.file.filename};
+    }else if(req.file.filename==='bgimg'){
+       x = {bgimg:req.file.filename};
+    }
+    const user = await Register.findByIdAndUpdate(req.params.id,x,{
+      run:true,
+      runValidators:true
+    })
+    res.status(200).json({
+      status:'Success',
+      Message:"Successfully uploaded images",
+      fieldname: req.file.fieldname,
+      bgimg: req.file.filename
+    })
+  }catch(err){
+    res.status(400).json({
+      status:'Failed',
+      err: err.message
+    })
+  }
+}
+
+exports.updateMyDetail = async(req,res,next)=>{
+  try{
+  console.log(req.body);
+  console.log(req.params.id);
+  console.log(req.file);
+  if(req.body.username || req.body.phoneNumber){
+    throw new Error('You can not update username(/updateUsername) & phoneNumber (/updatePhoneNumber) here, head over to following Url endpoints');
+  }
+  let registee;
+  if(req.file){
+    console.log("AA gaya bhai bol");
+     registee = await Register.findByIdAndUpdate(req.param.id,{...req.body,image:req.file.filename},{
+      new:true,
+      runValidators:true,
+    })
+  }else{
+     registee = await Register.findByIdAndUpdate(req.params.id,req.body,{
+      new: true,
+        runValidators: true
+    });
+  }
+  
+  if(!registee){
+    throw new Error("No User with this id found.Please enter valid id");
+  }
+  res.status(200).json({
+    status:'Success',
+    data:{
+      registee
+    }
+  });
+}catch(err){
+  res.status(404).json({
+    status:'Failed',
+    err: err.message
+  })
+}
+}
+
