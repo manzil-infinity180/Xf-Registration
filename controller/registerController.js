@@ -198,8 +198,8 @@ exports.updateUsername = async (req,res,next)=>{
     })
   }
 }
-// Uploading image using multer npm package 
 
+// Uploading image using multer npm package 
 const diskStorage = multer.diskStorage({
   destination:(req,file,cb)=>{
     cb(null,'public/img');
@@ -230,7 +230,6 @@ exports.uploadBackgroundPhoto = upload.single('bgimg');
 
 exports.updateMe = async(req,res,next)=>{
   try{
-
     console.log(req.file);
     console.log(req.body);
     const name = req.file.fieldname;
@@ -276,7 +275,17 @@ exports.updateMyDetail = async(req,res,next)=>{
   let registee;
   if(req.file){
     console.log("AA gaya bhai bol");
-     registee = await Register.findByIdAndUpdate(req.param.id,{...req.body,image:req.file.filename},{
+    let updateData = {};
+    if (req.file.fieldname === 'photo') {
+      if (!updateData.photo) {
+      updateData.image = req.file.filename;
+      }
+    } else if (req.file.fieldname === 'bgimg') {
+      if (!updateData.bgimg) {
+        updateData.bgimg = req.file.filename;
+      }
+    }
+     registee = await Register.findByIdAndUpdate(req.params.id,{...req.body,updateData},{
       new:true,
       runValidators:true,
     })

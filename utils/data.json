@@ -29,8 +29,85 @@
   "location": { "type" : "Point",
     "coordinates": [93.185654, 26.0739] },
   "OneTopSkill":"Nodejs"
-
-
-
+},
+{
+  "name":"Guddu Sharma",
+  "age":29,
+  "email":"guddu@gmail.com",
+  "college":"BIET Jhansi",
+  "address":"hyderabad",
+  "PostalCode":500001,
+  "position":"Data analyt",
+  "image":"user011.jpg",
+  "bgimg":"bguser019.jpg",
+  "username":"guddu456",
+  "phoneNumber":8149132874,
+  "location": { "type" : "Point",
+    "coordinates": [78.491684, 17.3850] },
+  "OneTopSkill":"Nodejs"
+},
+{
+  "name":"Rambheli",
+  "age":29,
+  "email":"bheliparsad@gmail.com",
+  "college":"ABES Engineering",
+  "address":"Mumbai",
+  "PostalCode":400001,
+  "position":"Prompt Engineering",
+  "image":"user011.jpg",
+  "bgimg":"bguser019.jpg",
+  "username":"bheli2809",
+  "phoneNumber":8149132874,
+  "location": { "type" : "Point",
+    "coordinates": [72.8777, 19.0760] },
+  "OneTopSkill":"Reactjs"
+},
+{
+  "name":"Vaishvu",
+  "age":29,
+  "email":"vaishu@gmail.com",
+  "college":"BBD University",
+  "address":"Gorakhpur",
+  "PostalCode":273010,
+  "position":"Prompt Engineering",
+  "image":"user011.jpg",
+  "bgimg":"bguser019.jpg",
+  "username":"vaishvu123",
+  "phoneNumber":8149132874,
+  "location": { "type" : "Point",
+    "coordinates": [83.3732, 26.7606] },
+  "OneTopSkill":"Javascript"
+},
+{
+  "name":"Aditya",
+  "age":19,
+  "email":"aditya356@gmail.com",
+  "college":"MMMUT Lucknow",
+  "address":"Gorakhpur",
+  "PostalCode":273413,
+  "position":"Ethical Hacker",
+  "image":"user011.jpg",
+  "bgimg":"bguser019.jpg",
+  "username":"aditya356",
+  "phoneNumber":8149132874,
+  "location": { "type" : "Point",
+    "coordinates": [83.4036, 26.5307] },
+  "OneTopSkill":"Javascript"
+},
+{
+  "name":"Pankaj",
+  "age":21,
+  "email":"pankaj@mmmut.in",
+  "college":"TMU Moradabad",
+  "address":"Gorakhpur",
+  "PostalCode":273413,
+  "position":"Student",
+  "image":"user011.jpg",
+  "bgimg":"bguser019.jpg",
+  "username":"pankaj34",
+  "phoneNumber":8149132874,
+  "location": { "type" : "Point",
+    "coordinates": [83.4036, 26.5307] },
+  "OneTopSkill":"CSS"
 }
 ]
