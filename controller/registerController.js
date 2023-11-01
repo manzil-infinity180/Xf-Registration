@@ -234,13 +234,20 @@ exports.updateMe = async(req,res,next)=>{
     console.log(req.file);
     console.log(req.body);
     const name = req.file.fieldname;
-    let x;
-    if(req.file.fieldname==='photo'){
-       x =  {photo:req.file.filename};
-    }else if(req.file.filename==='bgimg'){
-       x = {bgimg:req.file.filename};
-    }
-    const user = await Register.findByIdAndUpdate(req.params.id,x,{
+    let updateData = {};
+
+if (req.file.fieldname === 'photo') {
+  if (!updateData.photo) {
+  updateData.image = req.file.filename;
+  }
+} else if (req.file.fieldname === 'bgimg') {
+  if (!updateData.bgimg) {
+    updateData.bgimg = req.file.filename;
+  }
+}
+
+    console.log(updateData);
+    const user = await Register.findByIdAndUpdate(req.params.id,updateData,{
       run:true,
       runValidators:true
     })
