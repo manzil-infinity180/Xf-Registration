@@ -3,15 +3,15 @@ const session = require("express-session");
 const app = require("./../app.js");
 // const express = require("express");
 // const app = express();
-const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
+const GithubStrategy = require('passport-github').Strategy;
 const dotenv= require("dotenv");
 // Middleware 
 dotenv.config({path:'./config.env'});
 
-passport.use(new GoogleStrategy({
-    clientID: process.env.CLIENT_ID,
-    clientSecret: process.env.CLIENT_SECRET,
-    callbackURL: process.env.CALLBACK_URL,
+passport.use(new GithubStrategy({
+    clientID: process.env.CLIENT_ID_GITHUB,
+    clientSecret: process.env.CLIENT_SECRET_GITHUB,
+    callbackURL: process.env.CALLBACK_URL_GITHUB,
   },
 
   /*
@@ -44,8 +44,8 @@ passport.serializeUser(function(user,cb){
 passport.deserializeUser(function(obj,cb){
   return cb(null,obj);
 });
-exports.OAuthlogin = passport.authenticate('google',{scope: ['https://www.googleapis.com/auth/plus.login']});
-exports.OAuthCallback = passport.authenticate('google',{failureRedirect:'/'});
+exports.OAuthlogin = passport.authenticate('github',{scope: ['user:email']});
+exports.OAuthCallback = passport.authenticate('github',{failureRedirect:'/'});
 exports.OAuthCallbackReq = (req,res)=>{
   console.log("hello");
   res.redirect('/profile');
