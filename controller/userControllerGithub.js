@@ -1,6 +1,7 @@
 const passport = require("passport");
 const session = require("express-session");
 const app = require("./../app.js");
+const userSchema = require("./../model/userModel.js");
 // const express = require("express");
 // const app = express();
 const GithubStrategy = require('passport-github').Strategy;
@@ -22,19 +23,34 @@ passport.use(new GithubStrategy({
    */
 
   
-  (accessToken, refreshToken, profile, done) => { // done === cb (it is callback function)
+  async (accessToken, refreshToken, profile, done) => { // done === cb (it is callback function)
+    console.log("Hello from github");
     const option={
       accessToken,
       refreshToken,
       profile 
     };
-    console.log(option);
+    console.log(profile);
+    // console.log("JSON🤩✅"+option._json);
+    
+
+    const [photos] = profile.photos;
+
+    // console.log();
+    const user = await userSchema.create({
+      displayName: profile.displayName,
+      username: profile.username,
+      profileUrl: profile.profileUrl,
+      photo:photos.value,
+      followers: profile._json.followers,
+      following:profile._json.following
+    })
 
     // User is authenticated. You can save user information in your database.
 
 
     // here done is nothing but it is callback(cb)
-    return done(null, profile);
+    return done(null, user);
   }
 ));
  
@@ -50,6 +66,9 @@ exports.OAuthCallbackReq = (req,res)=>{
   console.log("hello");
   res.redirect('/profile');
 }
+
+
+
 
 
 
