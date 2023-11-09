@@ -7,7 +7,6 @@ const registerRoute = require("./router/registerRoute");
 const googleRoute = require("./router/googleRoute");
 const githubRoute = require("./router/githubRoute");
 app.use(express.json());
-
 // app.use('/user/auth/github',
 //   session({
 //     resave:false,
