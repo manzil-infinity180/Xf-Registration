@@ -2,7 +2,8 @@ const passport = require("passport");
 const session = require("express-session");
 const app = require("./../app.js");
 const jwt = require("jsonwebtoken");
-const userSchema = require("./../model/userModel.js");
+const { promisify } = require('util');
+const User = require("./../model/userModel.js");
 // const express = require("express");
 // const app = express();
 const GithubStrategy = require('passport-github').Strategy;
@@ -56,7 +57,7 @@ passport.use(new GithubStrategy({
     const [photos] = profile.photos;
 
     // console.log();
-    const user = await userSchema.create({
+    const user = await User.create({
       displayName: profile.displayName,
       username: profile.username,
       profileUrl: profile.profileUrl,
@@ -90,6 +91,34 @@ exports.OAuthCallbackReq = (req,res)=>{
   res.redirect('/profile');
 }
 
+
+// protected route 
+exports.protect = async (req,res,next)=>{
+  // getting token from cookies
+  try{
+    let token;
+  if(req.cookies.jwt){
+    token = req.cookies.jwt;
+  }
+  if(token){
+     new Error('You are not logged in! Please log in to get access');
+  };
+  // verification of the token 
+  const decode = await promisify(jwt.verify)(token,process.env.JWT_SECRET);
+  const currentUser = await User.findById(decode.id);
+  if(!currentUser){
+    new Error('The user belonging to this token does no longer exist')
+  }
+  next();
+
+  }catch(err){
+    res.status(400).json({
+      status: 'Failed',
+      err: err.message
+    })
+  }
+  
+}
 
 
 
