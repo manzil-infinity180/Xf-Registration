@@ -1,10 +1,27 @@
 const Register = require("./../model/registerModel");
 const CryptoJs = require("crypto-js");
+const APIFeatures = require("./../utils/apiFeature");
 const multer = require("multer");
 exports.getAllRegisterd = async(req,res,next)=>{
   try{
-    console.log(req.query.search);
-    const allRegistee = await Register.find();
+    // console.log(req.query.search);
+    // console.log(req.query);
+    // const allRegistee = await Register.find();
+    const features = new APIFeatures(Register.find(), req.query)
+    .filter()
+    .sort()
+    .limitFields()
+    .paginate();
+  const allRegistee = await features.query;
+
+    // const feature = new APIFeature(Register.find(),req.query)
+    //                  .filter()
+    //                  .sort()
+    //                  .limitFields()
+    //                  .paginate();
+    // const doc = await feature.query;
+
+    // console.log(doc);
     res.status(200).json({
       status:"Success",
       result : allRegistee.length,
