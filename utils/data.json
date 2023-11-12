@@ -109,5 +109,21 @@
   "location": { "type" : "Point",
     "coordinates": [83.4036, 26.5307] },
   "OneTopSkill":"CSS"
+},
+{
+  "name":"Bobby Singh",
+  "age":25,
+  "email":"bobbbys756@mmmut.in",
+  "college":"IGDTU Delhi",
+  "address":"Delhi",
+  "PostalCode":445787,
+  "position":"SDE",
+  "image":"user011.jpg",
+  "bgimg":"bguser019.jpg",
+  "username":"bobby2056",
+  "phoneNumber":8988889780,
+  "location": { "type" : "Point",
+    "coordinates": [77.2167, 28.6448] },
+  "OneTopSkill":"Python"
 }
 ]

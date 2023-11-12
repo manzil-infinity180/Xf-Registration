@@ -26,7 +26,7 @@ dotenv.config({path:'./config.env'});
 //   });
 
 // }
-
+// require('https').globalAgent.options.rejectUnauthorized = false;
 
 passport.use(new GithubStrategy({
     clientID: process.env.CLIENT_ID_GITHUB,
@@ -44,6 +44,7 @@ passport.use(new GithubStrategy({
 
   
   async (accessToken, refreshToken, profile, done) => { // done === cb (it is callback function)
+    
     console.log("Hello from github");
     const option={
       accessToken,

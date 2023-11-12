@@ -2,6 +2,7 @@ const Register = require("./../model/registerModel");
 const CryptoJs = require("crypto-js");
 const APIFeatures = require("./../utils/apiFeature");
 const multer = require("multer");
+const sendEmail = require("./../utils/mailing.js");
 exports.getAllRegisterd = async(req,res,next)=>{
   try{
     // console.log(req.query.search);
@@ -41,15 +42,33 @@ exports.getAllRegisterd = async(req,res,next)=>{
     
   }
 }
-exports.getRegistered = async(req,res,next)=>{
-  try{
-    
-    console.log(req.body);
-    const registeredUser = await Register.create(req.body);
-    console.log("New Registration \n "+registeredUser);
+exports.getRegistered = async (req,res,next)=>{
+  console.log(req.body);
+  const registeredUser = await Register.create(req.body);
+  console.log("New Registration \n "+registeredUser);
+
+try{
+    // const Newuser = await Register.findOne({email :req.body.email});
+ console.log(req.body.email);
+ console.log(registeredUser);
+ console.log(registeredUser.email);
+ const checkDetail ={
+  name: req.body.name,
+  username: req.body.username,
+  skill: req.body.OneTopSkill,
+
+ }
+ 
+    await sendEmail({
+      email: req.body.email,
+      subject : 'Xf Registration Successfully Done 🦾',
+      message : 'Thank You for Xf registration,you can know explore the Xf',
+      
+
+     })
+
     res.status(200).json({
       staus:"Success",
-
       data:{
         registeredUser
       }
@@ -60,7 +79,8 @@ exports.getRegistered = async(req,res,next)=>{
     res.status(400).json({
       status:"Failed",
       data:{
-        err:err.message
+        err:err,
+        messageErr : err.message
       }
     })
   }
@@ -329,4 +349,18 @@ exports.updateMyDetail = async(req,res,next)=>{
   })
 }
 }
+exports.deleteRegistee = async (req,res,next)=>{
+  try{
+    await Register.deleteOne({_id: req.params.id});
+    res.status(200).json({
+      status:"Success",
+      message: `Registee with id: ${req.params.id} is Deleted Now!`
+    })
 
+  }catch(err){
+    res.status(404).json({
+      status:"Failed",
+     err: err.message
+    })
+  }
+}

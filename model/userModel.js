@@ -7,7 +7,7 @@ const userSchema = new mongoose.Schema({
   },
   username:{
     type:String,
-    unique:[true,'Username should be unique! User already Exist']
+    // unique:[true,'Username should be unique! User already Exist']
   },
   profileUrl:{
     type:String

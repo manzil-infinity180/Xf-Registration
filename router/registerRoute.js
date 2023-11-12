@@ -9,6 +9,7 @@ router.get('/skill',registerController.searchBySkill);
 router.get('/find-user-within-radius',registerController.findUserWithinRadius);
 router.patch('/update-my-detail/:id',registerController.uploadUserPhoto
 ,registerController.updateMyDetail);
+router.delete('/delete-registee/:id',registerController.deleteRegistee);
 
 router.patch('/updatePhoneNumber/:id',registerController.updatePhoneNumber);
 router.patch('/updateUsername/:id',registerController.updateUsername);
