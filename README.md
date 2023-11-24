@@ -39,3 +39,8 @@ npm install
 npm i express nodemailer nodemon passport passport-github validate validator express express-session jsonwebtoken mongodb mongoose multer passport-google-oauth crypto-js
 ```
 
+<div style="centre">
+ 
+ <img width="840" style="center" alt="Screenshot 2023-11-24 at 11 27 40 PM" src="https://github.com/manzil-infinity180/Xf-Registration/assets/119070053/24d34cd0-34d9-46fb-b1e2-dacce1e6e74e">
+<img width="840" style="center" alt="Screenshot 2023-11-24 at 11 28 01 PM" src="https://github.com/manzil-infinity180/Xf-Registration/assets/119070053/f2050239-973a-4e42-90e3-6a0547732603">
+</div>
