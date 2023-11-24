@@ -25,7 +25,7 @@ Install thses all dependencies
     "validate": "^5.2.0",
     "validator": "^13.11.0"
 
-Here all the dependies in one goo
+Here all the dependencies in one goo
 Delete the package.json and package-lock.json
 Do the following commands -
 Setup the config.env file with our own credientials (ref config_example)
