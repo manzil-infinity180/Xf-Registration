@@ -45,3 +45,11 @@ npm i express nodemailer nodemon passport passport-github validate validator exp
  <img width="840" style="center" alt="Screenshot 2023-11-24 at 11 27 40 PM" src="https://github.com/manzil-infinity180/Xf-Registration/assets/119070053/24d34cd0-34d9-46fb-b1e2-dacce1e6e74e">
 <img width="840" style="center" alt="Screenshot 2023-11-24 at 11 28 01 PM" src="https://github.com/manzil-infinity180/Xf-Registration/assets/119070053/f2050239-973a-4e42-90e3-6a0547732603">
 </div>
+
+# Register 
+<img width="750" alt="Screenshot 2023-11-24 at 11 54 21 PM" src="https://github.com/manzil-infinity180/Xf-Registration/assets/119070053/a769fe0c-e49d-4285-8cc0-c51e43f369c8">
+
+# User
+<img width="786" alt="Screenshot 2023-11-24 at 11 53 58 PM" src="https://github.com/manzil-infinity180/Xf-Registration/assets/119070053/7b1fc6e3-829f-49cb-8377-41bdb430844a">
+
+
