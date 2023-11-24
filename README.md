@@ -24,12 +24,18 @@ Install thses all dependencies
     "passport-google-oauth20": "^2.0.0",
     "validate": "^5.2.0",
     "validator": "^13.11.0"
-
+```
+```
 Here all the dependencies in one goo
 Delete the package.json and package-lock.json
 Do the following commands -
 Setup the config.env file with our own credientials (ref config_example)
-npm install 
-npm i express nodemailer nodemon passport passport-github validate validator express express-session jsonwebtoken mongodb mongoose multer passport-google-oauth crypto-js
+```
+```
+npm install
+```
 
 ```
+npm i express nodemailer nodemon passport passport-github validate validator express express-session jsonwebtoken mongodb mongoose multer passport-google-oauth crypto-js
+```
+
