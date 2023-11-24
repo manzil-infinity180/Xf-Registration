@@ -8,7 +8,7 @@
 
 # Run Locally 
 ```
-Install thses all dependencies
+Install these all dependencies
 "crypto-js": "^4.2.0",
     "express": "^4.18.2",
     "express-session": "^1.17.3",
