@@ -4,6 +4,18 @@
 <p>Find the person using your location within the some range of radius to collobrate in project.</p>
  <p>Upload your achievement,project to showcase your skill and build our own portfolio .</p>
 
+ # INTRO
+ 
+ * User can getRegistered and will get notification on their email id
+   ```
+    subject : 'Xf Registration Successfully Done 🦾',
+    message : 'Thank You for Xf registration,you can know explore the Xf',
+   ```
+* User can search the other person via their top skills , username, postal code ,college name and also can find person in range by mentioning the <b> radius,latitude and longitude </b>
+* Having the feature to update their <b> phone number </b> , <b>username</b> and also their <b>profile photo</b> and <b>background image</b> too , we are not storing the image in database we simply storing in our diskStorage thanks to <b> multer package </b> that help to do so.
+* Register,update your details,delete your account,update your phone number,update profile photo & background image , search other person 
+
+
 <b>Documentation</b> - https://documenter.getpostman.com/view/27140962/2s9YeD8D4V
 
 # Run Locally 
