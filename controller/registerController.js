@@ -1,8 +1,11 @@
 const Register = require("./../model/registerModel");
 const CryptoJs = require("crypto-js");
 const APIFeatures = require("./../utils/apiFeature");
+const { promisify } = require('util');
+const jwt = require('jsonwebtoken');
 const multer = require("multer");
 const sendEmail = require("./../utils/mailing.js");
+const sendCookiesAndToken = require("../utils/sendCookiesAndToken");
 exports.getAllRegisterd = async(req,res,next)=>{
   try{
     // console.log(req.query.search);
@@ -59,14 +62,14 @@ try{
 
  }
  
-     await sendEmail({
-      email: req.body.email,
-      subject : 'Xf Registration Successfully Done 🦾',
-      message : 'Thank You for Xf registration,you can explore the Xf',
-     
-      
+    //  await sendEmail({
+    //   email: req.body.email,
+    //   subject : 'Xf Registration Successfully Done 🦾',
+    //   message : 'Thank You for Xf registration,you can explore the Xf',
+    //  })
 
-     })
+     await sendCookiesAndToken(registeredUser,res);
+     console.log(req.cookies);
 
     res.status(200).json({
       staus:"Success",
@@ -207,6 +210,15 @@ exports.updatePhoneNumber=async(req,res,next)=>{
 }
 exports.updateUsername = async (req,res,next)=>{
   try{
+
+    const token = req.cookies.jwt;
+    const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
+   console.log(decoded)
+   
+   // decoded.id ====> current logined user id 
+
+  // const currentUser = await User.findById(decoded.id);
+
 
     const user = await Register.findById(req.params.id);
     const lastUpdate = user.lastUpdate;
@@ -353,6 +365,8 @@ exports.updateMyDetail = async(req,res,next)=>{
 exports.deleteRegistee = async (req,res,next)=>{
   try{
     await Register.deleteOne({_id: req.params.id});
+    // clearing token
+    res.clearCookie('jwt');
     res.status(200).json({
       status:"Success",
       message: `Registee with id: ${req.params.id} is Deleted Now!`

@@ -1,5 +1,6 @@
 const express = require("express");
 const app = express();
+const cookieParser = require('cookie-parser');
 const session = require("express-session");
 const passport = require("passport");
 const bodyParser = require("body-parser");
@@ -7,6 +8,7 @@ const registerRoute = require("./router/registerRoute");
 const googleRoute = require("./router/googleRoute");
 const githubRoute = require("./router/githubRoute");
 app.use(express.json());
+app.use(cookieParser());
 // app.use('/user/auth/github',
 //   session({
 //     resave:false,
@@ -50,13 +52,14 @@ app.get('/profile',(req,res)=>{
 });
 
 app.get('/auth/github',
-    passport.authenticate('github', { scope: ['user:email'] })
+    passport.authenticate('github')
 );
 
 app.get('/auth/github/callback',
     passport.authenticate('github', { failureRedirect: '/' }),
     (req, res) => {
         // Successful authentication, redirect or respond as needed.
+        res.
         res.redirect('/profile');
     }
 );

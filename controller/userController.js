@@ -1,12 +1,14 @@
+const dotenv= require("dotenv");
+dotenv.config({path:'./config.env'});
 const passport = require("passport");
 const session = require("express-session");
 const app = require("./../app.js");
+
 // const express = require("express");
 // const app = express();
 const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
-const dotenv= require("dotenv");
+
 // Middleware 
-dotenv.config({path:'./config.env'});
 
 passport.use(new GoogleStrategy({
     clientID: process.env.CLIENT_ID,
