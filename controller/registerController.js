@@ -59,10 +59,11 @@ try{
 
  }
  
-    await sendEmail({
+     await sendEmail({
       email: req.body.email,
       subject : 'Xf Registration Successfully Done 🦾',
-      message : 'Thank You for Xf registration,you can know explore the Xf',
+      message : 'Thank You for Xf registration,you can explore the Xf',
+     
       
 
      })
