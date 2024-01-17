@@ -163,7 +163,7 @@ exports.findUserWithinRadius = async(req,res,next)=>{
 exports.updatePhoneNumber=async(req,res,next)=>{
   try{
     console.log(req.body);
-    const user = await Register.findById(req.params.id);
+    const user = await Register.findById(req.user);
     // console.log(user);
     if(!user){
       throw new Error("No user found , check your _id");
@@ -176,12 +176,12 @@ exports.updatePhoneNumber=async(req,res,next)=>{
     const clipherText = user.phoneNumber; // phone number from database
    console.log("userPhone: "+clipherText);
     const bytes = CryptoJs.AES.decrypt(clipherText,process.env.CRYPTO_SECRET);
-    const originalPhoneNumber = +bytes.toString(CryptoJs.enc.Utf8);
+    const originalPhoneNumber = bytes.toString(CryptoJs.enc.Utf8);
     // console.log(user.phoneNumber);
-    console.log("OriginalPass: "+originalPhoneNumber);
-    if(req.body.previousPhoneNumber !== originalPhoneNumber){
-      throw new Error("Your entered phone Number is not same with our database data,Entered correct Phone Number")
-    }
+    console.log("OriginalPass: "+ originalPhoneNumber);
+    // if(req.body.previousPhoneNumber !== originalPhoneNumber){
+    //   throw new Error("Your entered phone Number is not same with our database data,Entered correct Phone Number")
+    // }
     const encryptedPhoneNumber = CryptoJs.AES.encrypt(req.body.phoneNumber,process.env.CRYPTO_SECRET).toString();
     // user.phoneNumber = req.body.phoneNumber;
     // console.log(user.phoneNumber);
@@ -208,6 +208,68 @@ exports.updatePhoneNumber=async(req,res,next)=>{
 
   }
 }
+exports.login = async (req,res,next) =>{
+  try{
+    const loginedUser = await Register.findOne({email: req.body.email});
+
+    await sendCookiesAndToken(loginedUser,res);
+    console.log(loginedUser);
+    // console.log({
+    //   id: loginedUser._id,
+    //   email: loginedUser.email,
+    //   username : loginedUser.username
+    // })
+
+      await sendEmail({
+      email: req.body.email,
+      subject : `Xf Login Sucessful ${loginedUser.username}`,
+      message : `Welcome Back ${loginedUser.name} ,you are sucessfully logined in. 🤩`,
+     })
+    res.status(200).json({
+      status:"Successfully Logined In",
+    })
+    // console.log(loginedUser);
+
+
+  }catch(err){
+    res.status(400).json({
+      status:"Failed",
+      message : err.message
+    })
+     
+  }
+}
+exports.getMe = async(req,res,next)=>{
+  try{
+    const detail = await Register.findById(req.user);
+    res.status(200).json({
+      status : "Successful",
+      data: detail
+    })
+
+  }catch(err){
+    res.status(400).json({
+      status:"Failed",
+      message : err.message
+    })
+  }
+}
+exports.logout = async(req,res,next)=>{
+  try{
+    if(!req.user) throw new Error("You are already logout BRO!!!");
+    res.clearCookie('jwt');
+    res.status(200).json({
+      status:"Success",
+      message:"Successfully logout"
+    })
+
+  }catch(err){
+    res.status(400).json({
+      status:"Failed",
+      message : err.message
+    })
+  }
+}
 exports.updateUsername = async (req,res,next)=>{
   try{
 
@@ -218,9 +280,10 @@ exports.updateUsername = async (req,res,next)=>{
    // decoded.id ====> current logined user id 
 
   // const currentUser = await User.findById(decoded.id);
+  if(!req.user) throw new Error("I checked you are not logined yet,Please register or login first");
 
 
-    const user = await Register.findById(req.params.id);
+    const user = await Register.findById(req.user);
     const lastUpdate = user.lastUpdate;
     const date = new Date();
     console.log(date.getTime()-lastUpdate.getTime() - 5*1*1*1000 + "  "+ date.getTime()+"  "+lastUpdate.getTime());
@@ -371,6 +434,31 @@ exports.deleteRegistee = async (req,res,next)=>{
       status:"Success",
       message: `Registee with id: ${req.params.id} is Deleted Now!`
     })
+
+  }catch(err){
+    res.status(404).json({
+      status:"Failed",
+     err: err.message
+    })
+  }
+}
+
+// we will use it as middleware 
+exports.isAuthenticated = async (req,res,next) =>{
+  try{
+    let token;
+    if(req.cookies.jwt){
+      token = req.cookies.jwt;
+    }
+    if(!token){
+      throw new Error("OOPs, Firstly you have to logined in !!");
+    }
+    const decode = jwt.verify(token,process.env.JWT_SECRET);
+    console.log(decode);
+    const currentloginedUser = await Register.findById(decode.id);
+    console.log(currentloginedUser);
+    req.user = currentloginedUser;
+    next();
 
   }catch(err){
     res.status(404).json({

@@ -8,9 +8,10 @@ const signToken = (id) => {
 const sendCookiesAndToken = async (user,res) =>{
   // taking id of github profile
   console.log(user._id);
+  if(!user._id) throw new Error("Something went wrong!");
   const token = signToken(user._id);
   console.log({token});
-  console.log("demo: "+signToken(45555555));
+  // console.log("demo: "+signToken(45555555));
   // storing the token in cookie with the name 'jwt'
   await res.cookie('jwt',token,{
     expires: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000),
