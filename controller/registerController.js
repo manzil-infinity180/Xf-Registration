@@ -62,11 +62,11 @@ try{
 
  }
  
-    //  await sendEmail({
-    //   email: req.body.email,
-    //   subject : 'Xf Registration Successfully Done 🦾',
-    //   message : 'Thank You for Xf registration,you can explore the Xf',
-    //  })
+     await sendEmail({
+      email: req.body.email,
+      subject : 'Xf Registration Successfully Done 🦾',
+      message : 'Thank You for Xf registration,you can explore the Xf',
+     })
 
      await sendCookiesAndToken(registeredUser,res);
      console.log(req.cookies);
@@ -359,7 +359,7 @@ if (req.file.fieldname === 'photo') {
 }
 
     console.log(updateData);
-    const user = await Register.findByIdAndUpdate(req.params.id,updateData,{
+    const user = await Register.findByIdAndUpdate(req.user,updateData,{
       run:true,
       runValidators:true
     })
@@ -398,12 +398,12 @@ exports.updateMyDetail = async(req,res,next)=>{
         updateData.bgimg = req.file.filename;
       }
     }
-     registee = await Register.findByIdAndUpdate(req.params.id,{...req.body,updateData},{
+     registee = await Register.findByIdAndUpdate(req.user,{...req.body,updateData},{
       new:true,
       runValidators:true,
     })
   }else{
-     registee = await Register.findByIdAndUpdate(req.params.id,req.body,{
+     registee = await Register.findByIdAndUpdate(req.user,req.body,{
       new: true,
         runValidators: true
     });
@@ -427,7 +427,14 @@ exports.updateMyDetail = async(req,res,next)=>{
 }
 exports.deleteRegistee = async (req,res,next)=>{
   try{
-    await Register.deleteOne({_id: req.params.id});
+    const user = await Register.findOne(req.user);
+    await sendEmail({
+      email: user.email,
+      subject : `Xf Account Deleted ${user.username}`,
+      message : `Good Bye! ${user.name}, your account has been sucessfully deleted 🥲.\nWe regret to lose a USER!!!,we will work hard
+      to make it better. Give Feedback and Suggestion to XF.\n \n Thank you \n Xf Community ❤️`,
+     })
+    await Register.deleteOne({_id: user._id});
     // clearing token
     res.clearCookie('jwt');
     res.status(200).json({
