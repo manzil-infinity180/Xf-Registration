@@ -1,5 +1,6 @@
 const passport = require("passport");
 const session = require("express-session");
+
 const app = require("./../app.js");
 const jwt = require("jsonwebtoken");
 const { promisify } = require('util');
@@ -11,21 +12,8 @@ const dotenv= require("dotenv");
 // Middleware 
 dotenv.config({path:'./config.env'});
 
-// creating token using jwt 
-// const signToken = id => {jwt.sign({id},process.env.JWT_SECRET,{
-//   expireIn: new Date(Date.now() + 2*24*60*60*1000)
-//  })
-// };
 
-// const createSendToken = (user,res) =>{
-//   const token = signToken(user._id);
-//   // storing the token in cookie with the name 'jwt'
-//   res.cookie('jwt',token,{
-//     expires: new Date(Date.now() + 1*24*60*60*1000),
-//     httpOnly: true
-//   });
 
-// }
 // require('https').globalAgent.options.rejectUnauthorized = false;
 
 passport.use(new GithubStrategy({
@@ -51,7 +39,8 @@ passport.use(new GithubStrategy({
       refreshToken,
       profile 
     };
-    console.log(profile);
+    // console.log(profile);
+
     // console.log("JSON🤩✅"+option._json);
     
 
@@ -60,16 +49,18 @@ passport.use(new GithubStrategy({
     // console.log();
     const user = await User.create({
       displayName: profile.displayName,
+      githubId:profile.id,
       username: profile.username,
       profileUrl: profile.profileUrl,
       photo:photos.value,
       followers: profile._json.followers,
       following:profile._json.following
     });
+    console.log(user);
 
     // const token = signToken(user._id);
     // console.log(token);
-    // createSendToken(user,res);
+    // await createSendToken(user,res);
 
     // User is authenticated. You can save user information in your database.
 

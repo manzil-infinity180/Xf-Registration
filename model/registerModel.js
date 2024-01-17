@@ -75,6 +75,9 @@ const registerSchema = new mongoose.Schema({
   lastUpdate:{
     type:Date,
     default: Date.now()
+  },
+  resumeLink:{
+    type:String
   }
   
 });

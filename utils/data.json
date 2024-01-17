@@ -125,5 +125,22 @@
   "location": { "type" : "Point",
     "coordinates": [77.2167, 28.6448] },
   "OneTopSkill":"Python"
+},
+{
+  "name":"Vanshreyu Singh",
+  "age":20,
+  "email":"mmmut2809@gmail.com",
+  "college":"IIT Delhi",
+  "address":"Hyderbad",
+  "PostalCode":445787,
+  "position":"Backend Dev",
+  "image":"user011.jpg",
+  "bgimg":"bguser019.jpg",
+  "username":"vanshreyu@809",
+  "phoneNumber":9988889780,
+  "location": { "type" : "Point",
+  "coordinates": [78.4767, 17.4065] },
+  "OneTopSkill":"Javascript",
+  "resumeLink":"https://docs.google.com/document/d/13qyfdlue1aNGlDzjy33C_5JcajN4jalsKW9CtUy6HZ0/edit?pli=1"
 }
 ]
