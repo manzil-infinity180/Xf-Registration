@@ -2,7 +2,7 @@ const dotenv= require("dotenv");
 dotenv.config({path:'./config.env'});
 const passport = require("passport");
 const session = require("express-session");
-const app = require("./../app.js");
+const app = require("../app.js");
 
 // const express = require("express");
 // const app = express();

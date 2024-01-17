@@ -21,11 +21,7 @@ const userSchema = new mongoose.Schema({
   following:{
     type:Number
   }
-
-  
 });
-
-
 
 const User = mongoose.model('User',userSchema);
 module.exports=User;
