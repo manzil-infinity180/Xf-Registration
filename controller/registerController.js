@@ -211,6 +211,9 @@ exports.updatePhoneNumber=async(req,res,next)=>{
 exports.login = async (req,res,next) =>{
   try{
     const loginedUser = await Register.findOne({email: req.body.email});
+    if(!loginedUser) {
+      throw new Error("No account as been found with these Email-id.Try again!!");
+    }
 
     await sendCookiesAndToken(loginedUser,res);
     console.log(loginedUser);
