@@ -7,8 +7,28 @@ const bodyParser = require("body-parser");
 const registerRoute = require("./router/registerRoute");
 const googleRoute = require("./router/googleRoute");
 const githubRoute = require("./router/githubRoute");
+const path= require('path');
+const cors = require('cors');
+const cloudinary = require("cloudinary").v2;
 app.use(express.json());
 app.use(cookieParser());
+
+app.use(cors({
+    origin: ["http://localhost:5173"],
+  methods: ["GET,HEAD,PUT,PATCH,POST,DELETE"], 
+  credentials:true
+}));
+
+cloudinary.config({ 
+  cloud_name: process.env.CLOUDINARY_NAME, 
+  api_key: process.env.CLOUDINARY_API_KEY, 
+  api_secret: process.env.CLOUDINARY_API_SECRET
+});
+// console.log(cloudinary.config())
+cloudinary.config({
+  secure: true
+});
+
 // app.use('/user/auth/github',
 //   session({
 //     resave:false,
@@ -23,6 +43,7 @@ app.use(cookieParser());
 //     secret : process.env.CLIENT_SECRET,
 //   })
 // );
+
 app.use(
    session({
     resave:false,
@@ -69,7 +90,7 @@ app.get('/profile', (req, res) => {
     // Access user information using req.user
     res.json(req.user);
 });
-
+app.use(express.static(path.join(__dirname, 'src/public')));
 app.use(express.urlencoded({ extended: false }));
 
 module.exports=app;

@@ -1,17 +1,19 @@
 const express = require('express');
 const router = express.Router();
 const registerController = require("./../controller/registerController");
-
-router.get('/login',registerController.login);
+const projectController = require("./../controller/projectController");
+router.post('/login',registerController.login);
 router.post('/register',registerController.getRegistered);
+router.get('/search/:username',registerController.getOtherUserDetail);
 
-router.use(registerController.isAuthenticated);
 router.get('/',registerController.getAllRegisterd);
+router.use(registerController.isAuthenticated);
 
 router.get('/search',registerController.searchPerson);
+
 router.get('/skill',registerController.searchBySkill);
 router.get('/find-user-within-radius',registerController.findUserWithinRadius);
-router.patch('/update-my-detail/:id',registerController.uploadUserPhoto
+router.patch('/update-my-detail',registerController.uploadUserPhoto
 ,registerController.updateMyDetail);
 router.delete('/delete-registee',registerController.deleteRegistee);
 
@@ -23,6 +25,12 @@ router.patch('/upload-bgimg',registerController.uploadBackgroundPhoto
 ,registerController.updateMe);
 router.get('/user-detail',registerController.getMe);
 router.get('/logout',registerController.logout);
+
+// posting the project for the login in user 
+router.post('/post-project',projectController.uploadProjectimg,projectController.postProject);
+router.delete('/post-project/:id',projectController.deletePost);
+router.patch('/post-project/:id',projectController.updatePost);
+router.get('/post-project/:id',projectController.getPostById);
 
 
 

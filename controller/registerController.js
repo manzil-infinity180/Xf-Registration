@@ -6,6 +6,8 @@ const jwt = require('jsonwebtoken');
 const multer = require("multer");
 const sendEmail = require("./../utils/mailing.js");
 const sendCookiesAndToken = require("../utils/sendCookiesAndToken");
+const cloudinary = require("cloudinary").v2;
+const dataUri = require("../utils/dataUri.js")
 exports.getAllRegisterd = async(req,res,next)=>{
   try{
     // console.log(req.query.search);
@@ -46,11 +48,16 @@ exports.getAllRegisterd = async(req,res,next)=>{
   }
 }
 exports.getRegistered = async (req,res,next)=>{
+
+
+try{
+  const isUser = await Register.findOne({email:req.body.email});
+  if(isUser){
+    throw new Error("User already exist");
+  }
   console.log(req.body);
   const registeredUser = await Register.create(req.body);
   console.log("New Registration \n "+registeredUser);
-
-try{
     // const Newuser = await Register.findOne({email :req.body.email});
  console.log(req.body.email);
  console.log(registeredUser);
@@ -79,13 +86,11 @@ try{
     })
 
   }catch(err){
-    console.log(err.message);
     res.status(400).json({
       status:"Failed",
-      data:{
-        err:err,
-        messageErr : err.message
-      }
+      
+        message:err.message
+      
     })
   }
 }
@@ -216,6 +221,7 @@ exports.login = async (req,res,next) =>{
     }
 
     await sendCookiesAndToken(loginedUser,res);
+    // req.user = loginedUser;
     console.log(loginedUser);
     // console.log({
     //   id: loginedUser._id,
@@ -223,13 +229,16 @@ exports.login = async (req,res,next) =>{
     //   username : loginedUser.username
     // })
 
-      await sendEmail({
-      email: req.body.email,
-      subject : `Xf Login Sucessful ${loginedUser.username}`,
-      message : `Welcome Back ${loginedUser.name} ,you are sucessfully logined in. 🤩`,
-     })
+    //   await sendEmail({
+    //   email: req.body.email,
+    //   subject : `Xf Login Sucessful ${loginedUser.username}`,
+    //   message : `Welcome Back ${loginedUser.name} ,you are sucessfully logined in. 🤩`,
+    //  })
     res.status(200).json({
       status:"Successfully Logined In",
+      data:{
+        loginedUser
+      }
     })
     // console.log(loginedUser);
 
@@ -244,11 +253,39 @@ exports.login = async (req,res,next) =>{
 }
 exports.getMe = async(req,res,next)=>{
   try{
-    const detail = await Register.findById(req.user);
+
+    // const token = req.cookies.jwt;
+    // const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
+    // console.log(decoded)
+     if(!req.user){
+      throw new Error("first login");
+     }
+    const detail = await Register.findById(req.user).populate("project");
+    // const detail = await Register.findById(decoded.id);
     res.status(200).json({
       status : "Successful",
       data: detail
     })
+
+  }catch(err){
+    res.status(400).json({
+      status:"Failed",
+      message : err.message
+    })
+  }
+}
+exports.getOtherUserDetail = async(req,res,next)=>{
+  try{
+    
+    const params = req.params.username;
+    const detail = await Register.findOne({username:params}).populate("project");
+    // const detail = await Register.findById(decoded.id);
+    res.status(200).json({
+      status : "Success",
+      data:{
+        detail
+      }
+    });
 
   }catch(err){
     res.status(400).json({
@@ -263,7 +300,7 @@ exports.logout = async(req,res,next)=>{
     res.clearCookie('jwt');
     res.status(200).json({
       status:"Success",
-      message:"Successfully logout"
+      data:"Successfully logout"
     })
 
   }catch(err){
@@ -275,24 +312,23 @@ exports.logout = async(req,res,next)=>{
 }
 exports.updateUsername = async (req,res,next)=>{
   try{
-
     const token = req.cookies.jwt;
     const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
-   console.log(decoded)
+    console.log(decoded)
    
    // decoded.id ====> current logined user id 
 
   // const currentUser = await User.findById(decoded.id);
-  if(!req.user) throw new Error("I checked you are not logined yet,Please register or login first");
+    if(!req.user) throw new Error("I checked you are not logined yet,Please register or login first");
 
 
     const user = await Register.findById(req.user);
     const lastUpdate = user.lastUpdate;
     const date = new Date();
     console.log(date.getTime()-lastUpdate.getTime() - 5*1*1*1000 + "  "+ date.getTime()+"  "+lastUpdate.getTime());
-    if(((date.getTime()-lastUpdate.getTime()) - 24 *60 * 60 * 1000) <=0){
-      throw new Error("User can change their username onces in 24 hour");
-    }
+    // if(((date.getTime()-lastUpdate.getTime()) - 24 *60 * 60 * 1000) <=0){
+    //   throw new Error("User can change their username onces in 24 hour");
+    // }
     const updatedUser = await Register.findByIdAndUpdate(user.id,{username: req.body.username,
     lastUpdate:new Date()},{
       new:true,
@@ -310,7 +346,7 @@ exports.updateUsername = async (req,res,next)=>{
   }catch(err){
     res.status(404).json({
       status:"failed",
-      err:err.message
+      message:err.message
     })
   }
 }
@@ -331,6 +367,7 @@ const diskStorage = multer.diskStorage({
     }
   }
 });
+
 const multerFile = (req,file,cb)=>{
   if(file.mimetype.startsWith('image')){
     cb(null,true);
@@ -338,29 +375,89 @@ const multerFile = (req,file,cb)=>{
     cb(null,false);
   }
 }
-
-const upload = multer({storage: diskStorage});
+const storage = multer.memoryStorage();
+const upload = multer({storage});
 
 exports.uploadUserPhoto = upload.single('photo');
 exports.uploadBackgroundPhoto = upload.single('bgimg');
 
 exports.updateMe = async(req,res,next)=>{
   try{
+    // console.log(req.file);
+    console.log("hello");
     console.log(req.file);
     console.log(req.body);
-    const name = req.file.fieldname;
+    // const name = req.file.fieldname;
     let updateData = {};
+    console.log(req.file);
 
-if (req.file.fieldname === 'photo') {
+    if(req.file){
+      console.log("hyy");
+    }
+    // setting cloudinary 
+
+    // const options = {
+    //   use_filename: true,
+    //   unique_filename: false,
+    //   overwrite: true,
+    // };
+    // let imageURL = "default.jpg";
+
+    // let imagePath = `https://cloudinary-devs.github.io/cld-docs-assets/assets/images/${imageURL}`;
+    const imageSize = 10 * 1024 * 1024;
+    if(imageSize < req.file.size){
+      throw new Error("Your file must be less than 10 MB")
+    }
+  if (req.file.fieldname === 'photo') {
   if (!updateData.photo) {
-  updateData.image = req.file.filename;
+    console.log(req.file);
+    
+    const b64 = Buffer.from(req.file.buffer).toString("base64");
+    let dataURI = "data:" + req.file.mimetype + ";base64," + b64;
+    // imageURL = req.file.filename;
+    // let imagePath = `https://cloudinary-devs.github.io/cld-docs-assets/assets/images/${imageURL}`;
+    let result = await cloudinary.uploader.upload(dataURI,{
+      folder:"photo"
+    });
+    
+    
+    // console.log(result);
+  // updateData.image = req.file.filename;
+    updateData.image = result.url;
   }
-} else if (req.file.fieldname === 'bgimg') {
+} 
+// const b64 = Buffer.from(req.file.buffer).toString("base64");
+//     let dataURI = "data:" + req.file.mimetype + ";base64," + b64;
+// console.log(dataURI);
+// imageURL = req.file.filename;
+// let imagePath = `https://cloudinary-devs.github.io/cld-docs-assets/assets/images/${imageURL}`;
+
+    // const dataURI = dataUri.getDataUri(req.file);
+    // let result = await cloudinary.uploader.upload(dataURI.content,{
+    //   folder: "photo",
+    // });
+    
+    
+    // console.log(result);
+  // updateData.image = req.file.filename;
+
+    // updateData.image = result.url; 
+
+  if (req.file.fieldname === 'bgimg') {
   if (!updateData.bgimg) {
-    updateData.bgimg = req.file.filename;
+    // imageURL = req.file.filename;
+    // let imagePath = `https://cloudinary-devs.github.io/cld-docs-assets/assets/images/${imageURL}`;
+    // let result = await cloudinary.uploader.upload(imagePath, options);
+    // console.log(req.file)
+    const b64 = Buffer.from(req.file.buffer).toString("base64");
+    let dataURI = "data:" + req.file.mimetype + ";base64," + b64;
+    let result = await cloudinary.uploader.upload(dataURI,{
+      folder:"bgimg"
+    });
+    // updateData.bgimg = req.file.filename;
+    updateData.bgimg = result.url;
   }
 }
-
     console.log(updateData);
     const user = await Register.findByIdAndUpdate(req.user,updateData,{
       run:true,
@@ -369,11 +466,13 @@ if (req.file.fieldname === 'photo') {
     res.status(200).json({
       status:'Success',
       Message:"Successfully uploaded images",
-      fieldname: req.file.fieldname,
-      bgimg: req.file.filename
+      // fieldname: req.file.fieldname,
+      updateData
     })
   }catch(err){
+    console.log(err);
     res.status(400).json({
+
       status:'Failed',
       err: err.message
     })
@@ -392,15 +491,15 @@ exports.updateMyDetail = async(req,res,next)=>{
   if(req.file){
     console.log("AA gaya bhai bol");
     let updateData = {};
-    if (req.file.fieldname === 'photo') {
-      if (!updateData.photo) {
-      updateData.image = req.file.filename;
-      }
-    } else if (req.file.fieldname === 'bgimg') {
-      if (!updateData.bgimg) {
-        updateData.bgimg = req.file.filename;
-      }
-    }
+    // if (req.file.fieldname === 'photo') {
+    //   if (!updateData.photo) {
+    //   updateData.image = req.file.filename;
+    //   }
+    // } else if (req.file.fieldname === 'bgimg') {
+    //   if (!updateData.bgimg) {
+    //     updateData.bgimg = req.file.filename;
+    //   }
+    // }
      registee = await Register.findByIdAndUpdate(req.user,{...req.body,updateData},{
       new:true,
       runValidators:true,
@@ -430,7 +529,8 @@ exports.updateMyDetail = async(req,res,next)=>{
 }
 exports.deleteRegistee = async (req,res,next)=>{
   try{
-    const user = await Register.findOne(req.user);
+    const user = await Register.findById(req.user);
+    console.log(user);
     await sendEmail({
       email: user.email,
       subject : `Xf Account Deleted ${user.username}`,
@@ -442,10 +542,11 @@ exports.deleteRegistee = async (req,res,next)=>{
     res.clearCookie('jwt');
     res.status(200).json({
       status:"Success",
-      message: `Registee with id: ${req.params.id} is Deleted Now!`
+      message: `Registee with Username: ${user.username} is Deleted Account!`
     })
 
   }catch(err){
+    console.log(err)
     res.status(404).json({
       status:"Failed",
      err: err.message
@@ -460,6 +561,8 @@ exports.isAuthenticated = async (req,res,next) =>{
     if(req.cookies.jwt){
       token = req.cookies.jwt;
     }
+    console.log("token----->")
+    console.log(token);
     if(!token){
       throw new Error("OOPs, Firstly you have to logined in !!");
     }

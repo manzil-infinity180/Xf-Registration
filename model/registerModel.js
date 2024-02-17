@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const validator = require('validator');
 var CryptoJs = require("crypto-js");
-
+const shortUrl = require("node-url-shortener");
 const registerSchema = new mongoose.Schema({
   name:{
     type:String,
@@ -26,30 +26,44 @@ const registerSchema = new mongoose.Schema({
   college:{
     type:String
   },
-  address:{
+  summary:{
+    type:"string",
+    required:[true,"Introduce your self under 150 words"]
+  },address:{
     type:String,
     required:[true,'Address is Required Field']
-  },
-  PostalCode:{
-    type:String,
-    required:[true,'Enter your nearby postal code'],
-    maxlengt:32
   },
   position:{
     type:String,
     required:[true,'Any tag like student,profession dev,senior dev,etc']
   },
   image:{
-    type:String
+    type:String,
+    default:"https://res.cloudinary.com/dk9gvtcgx/image/upload/v1707504137/photo/avbfvg79bc63njuqtaio.png"
   },
   bgimg:{
-    type:String
+    type:String,
+    default:"https://res.cloudinary.com/dk9gvtcgx/image/upload/v1707504343/bgimg/d27dxzucsy0ai2yfx5et.webp"
   },
-  socialLink:{
-    type:String
+  github:{
+    type:String,
+    default:""
   },
-  phoneNumber:{
-    type:String
+  linkedin:{
+    type:String,
+    default:""
+  },
+  twitter:{
+    type:String,
+    default:""
+  },
+  leetcode:{
+    type:String,
+    default:""
+  },
+  codeforces:{
+    type:String,
+    default:""
   },
   createdAt:{
     type:String,
@@ -59,19 +73,28 @@ const registerSchema = new mongoose.Schema({
     type:String,
     required:[true,'Required Field to Find Similar skill people']
   },
-  // GeoJson (Mongoose)
-  location:{
-    type:{
-      type:String, // Don't do `{ location: { type: String } }` --- this will not going to work 
-      default:"Point",   // 'location.type' must be 'Point'
-      enum:['Point'],
-      required:[true,"Wrong Valued type, do like this location: { type: 'Point', coordinates: [-104.9903, 39.7392] }"]
-    },
-    coordinates:{
-      type:[Number],
-      required:[true,"Wrong Valued type . do like this { type: 'Point', coordinates: [longitude, latitude] }"]
-    }
+  skills:{
+    type:String,
   },
+  project:[
+    {
+      type:mongoose.Schema.Types.ObjectId,
+      ref:"Profile"
+    },
+  ],
+  // GeoJson (Mongoose)
+  // location:{
+  //   type:{
+  //     type:String, // Don't do `{ location: { type: String } }` --- this will not going to work 
+  //     default:"Point",   // 'location.type' must be 'Point'
+  //     enum:['Point'],
+  //     // required:[true,"Wrong Valued type, do like this location: { type: 'Point', coordinates: [-104.9903, 39.7392] }"]
+  //   },
+  //   coordinates:{
+  //     type:[Number],
+  //     // required:[true,"Wrong Valued type . do like this { type: 'Point', coordinates: [longitude, latitude] }"]
+  //   }
+  // },
   lastUpdate:{
     type:Date,
     default: Date.now()
@@ -83,7 +106,7 @@ const registerSchema = new mongoose.Schema({
 });
 
 // Indexes in location 
-registerSchema.index({location:'2dsphere'}); 
+// registerSchema.index({location:'2dsphere'}); 
 
 registerSchema.pre('save',function(next){
   const newDate = new Date();
@@ -123,7 +146,7 @@ registerSchema.pre('save',function(next){
     combined = letter1+letter3+random;
     this.username = combined;
   }
-}
+} 
   next();
 });
 
@@ -142,9 +165,27 @@ registerSchema.pre('save',function(next){
   next();
 
 });
+// 
+function ShortYourUrl(link){
+  let shortenLink;
+  shortUrl.short(link, function (err, url) {
+    console.log(url);
+    shortenLink = url;
+  });
+    return shortenLink;
+}
+
+
 registerSchema.pre('save',function(next){
   const skillLowerCase = this.OneTopSkill.toLowerCase();
   this.OneTopSkill = skillLowerCase;
+  if(this.skills){
+    const skillsLowerCase = this.skills.toLowerCase();
+    this.skills = skillsLowerCase;
+  }
+
+  // ShortYourUrl(this.github);  for shorten link 
+
   next();
 })
 
