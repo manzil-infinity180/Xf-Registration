@@ -76,7 +76,22 @@ exports.updatePost = async(req,res,next)=>{
   try{
     const id = req.params.id;
     console.log(id);
-    const data = await Profile.findByIdAndUpdate({_id:id},req.body);
+    let projectimg;
+    console.log("heyyyy");   
+    console.log(req.body);
+    if(req.file){
+      console.log(req.file)
+      const b64 = Buffer.from(req.file.buffer).toString("base64");
+      let dataURI = "data:" + req.file.mimetype + ";base64," + b64;
+      result = await cloudinary.uploader.upload(dataURI,{
+        folder:"projectimg"
+      });
+      projectimg = result.url;
+    }
+    console.log(projectimg);
+    console.log(req.file)
+    
+    const data = await Profile.findByIdAndUpdate({_id:id},{...req.body,projectimg});
     
     res.status(200).json({
       status:"Sucess",

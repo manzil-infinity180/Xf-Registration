@@ -29,7 +29,7 @@ router.get('/logout',registerController.logout);
 // posting the project for the login in user 
 router.post('/post-project',projectController.uploadProjectimg,projectController.postProject);
 router.delete('/post-project/:id',projectController.deletePost);
-router.patch('/post-project/:id',projectController.updatePost);
+router.patch('/post-project/:id',projectController.uploadProjectimg,projectController.updatePost);
 router.get('/post-project/:id',projectController.getPostById);
 
 
