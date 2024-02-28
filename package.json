@@ -20,5 +20,15 @@
     "passport-google-oauth": "^2.0.0",
     "validate": "^5.2.0",
     "validator": "^13.11.0"
-  }
+  },
+  "scripts": {
+    "start": "node server.js"
+  },
+  "name": "xf-registration",
+  "description": "# INTRO",
+  "version": "1.0.0",
+  "main": "app.js",
+  "devDependencies": {},
+  "author": "",
+  "license": "ISC"
 }

@@ -229,11 +229,11 @@ exports.login = async (req,res,next) =>{
     //   username : loginedUser.username
     // })
 
-    //   await sendEmail({
-    //   email: req.body.email,
-    //   subject : `Xf Login Sucessful ${loginedUser.username}`,
-    //   message : `Welcome Back ${loginedUser.name} ,you are sucessfully logined in. 🤩`,
-    //  })
+      await sendEmail({
+      email: req.body.email,
+      subject : `Xf Login Sucessful ${loginedUser.username}`,
+      message : `Welcome Back ${loginedUser.name} ,you are sucessfully logined in. 🤩`,
+     })
     res.status(200).json({
       status:"Successfully Logined In",
       data:{

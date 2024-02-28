@@ -5,9 +5,7 @@ const port = process.env.PORT;
 const app = require("./app");
 const DB = process.env.DATABASE.replace('<PASSWORD>',process.env.PASSWORD);
 
-mongoose.connect(DB,{
-  useNewUrlParser:true
-}).then(()=>{
+mongoose.connect(DB).then(()=>{
   console.log("Successfully Connected to Database!");
 });
 
