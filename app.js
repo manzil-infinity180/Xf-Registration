@@ -14,7 +14,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 app.use(cors({
-    origin: ["https://xf-frontend.onrender.com/"],
+  origin: ["https://xf-frontend.onrender.com"],
   methods: ["GET,HEAD,PUT,PATCH,POST,DELETE"], 
   credentials:true
 }));
@@ -57,39 +57,38 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use('/api/v1',registerRoute);
 
-app.use('/user/auth/google',googleRoute);
-app.use('/user/auth/github',githubRoute);
+// app.use('/user/auth/google',googleRoute);
+// app.use('/user/auth/github',githubRoute);
 
-app.get('/success', (req, res) => {
-  // This route is protected and can only be accessed by authenticated users.
-  // Add your logic here.
-  res.send("Successfully login ");
-});
+// app.get('/success', (req, res) => {
 
-app.get('/failure',(req,res)=>{
-  res.send("Failed ---> check it out again");
-});
-app.get('/profile',(req,res)=>{
-  res.end("Hello Success!!");
-});
+//   res.send("Successfully login ");
+// });
 
-app.get('/auth/github',
-    passport.authenticate('github')
-);
+// app.get('/failure',(req,res)=>{
+//   res.send("Failed ---> check it out again");
+// });
+// app.get('/profile',(req,res)=>{
+//   res.end("Hello Success!!");
+// });
 
-app.get('/auth/github/callback',
-    passport.authenticate('github', { failureRedirect: '/' }),
-    (req, res) => {
-        // Successful authentication, redirect or respond as needed.
-        res.
-        res.redirect('/profile');
-    }
-);
+// app.get('/auth/github',
+//     passport.authenticate('github')
+// );
 
-app.get('/profile', (req, res) => {
-    // Access user information using req.user
-    res.json(req.user);
-});
+// app.get('/auth/github/callback',
+//     passport.authenticate('github', { failureRedirect: '/' }),
+//     (req, res) => {
+//         // Successful authentication, redirect or respond as needed.
+//         res.
+//         res.redirect('/profile');
+//     }
+// );
+
+// app.get('/profile', (req, res) => {
+//     // Access user information using req.user
+//     res.json(req.user);
+// });
 app.use(express.static(path.join(__dirname, 'src/public')));
 app.use(express.urlencoded({ extended: false }));
 
