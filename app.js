@@ -14,7 +14,8 @@ app.use(express.json());
 app.use(cookieParser());
 
 app.use(cors({
-    origin: ["https://xf-frontend.onrender.com/","http://localhost:5173"],
+    origin: ["https://xf-frontend.onrender.com/"],
+    // origin: ["http://localhost:5173"],
   methods: ["GET,HEAD,PUT,PATCH,POST,DELETE"], 
   credentials:true
 }));
