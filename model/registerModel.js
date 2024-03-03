@@ -1,7 +1,6 @@
 const mongoose = require("mongoose");
 const validator = require('validator');
 var CryptoJs = require("crypto-js");
-const shortUrl = require("node-url-shortener");
 const registerSchema = new mongoose.Schema({
   name:{
     type:String,
@@ -165,16 +164,6 @@ registerSchema.pre('save',function(next){
   next();
 
 });
-// 
-function ShortYourUrl(link){
-  let shortenLink;
-  shortUrl.short(link, function (err, url) {
-    console.log(url);
-    shortenLink = url;
-  });
-    return shortenLink;
-}
-
 
 registerSchema.pre('save',function(next){
   const skillLowerCase = this.OneTopSkill.toLowerCase();
