@@ -5,6 +5,7 @@ const projectController = require("./../controller/projectController");
 router.post('/login',registerController.login);
 router.post('/register',registerController.getRegistered);
 router.get('/search/:username',registerController.getOtherUserDetail);
+router.post('/verify',registerController.verify);
 
 router.get('/',registerController.getAllRegisterd);
 router.use(registerController.isAuthenticated);

@@ -213,34 +213,54 @@ exports.updatePhoneNumber=async(req,res,next)=>{
 
   }
 }
+let otp,getLoginUser;
 exports.login = async (req,res,next) =>{
   try{
     const loginedUser = await Register.findOne({email: req.body.email});
     if(!loginedUser) {
       throw new Error("No account as been found with these Email-id.Try again!!");
     }
+    getLoginUser = loginedUser;
+    otp =Math.floor(Math.random()*56789 + 10210); 
 
-    await sendCookiesAndToken(loginedUser,res);
-    // req.user = loginedUser;
-    console.log(loginedUser);
-    // console.log({
-    //   id: loginedUser._id,
-    //   email: loginedUser.email,
-    //   username : loginedUser.username
-    // })
-
+    // await sendCookiesAndToken(loginedUser,res);
+   
       await sendEmail({
       email: req.body.email,
-      subject : `Xf Login Sucessful ${loginedUser.username}`,
-      message : `Welcome Back ${loginedUser.name} ,you are sucessfully logined in. 🤩`,
+      subject : `Xf Login OTP Verification`,
+      message : `Welcome Back ${loginedUser.name} ,your OTP for verification is ${otp}`,
      })
     res.status(200).json({
-      status:"Successfully Logined In",
+      status:"Successfully OTP Send",
+    })
+  }catch(err){
+    res.status(400).json({
+      status:"Failed",
+      message : err.message
+    })
+     
+  }
+}
+exports.verify = async(req,res,next) =>{
+  try{
+    let OTP = Number(req.body.otp);
+    if(OTP!==otp){
+      throw new Error("Wrong OTP checkout correctly or generate new One !!");
+    }
+
+    await sendCookiesAndToken(getLoginUser,res);
+    await sendEmail({
+      email: getLoginUser.email,
+      subject : `Xf Login Successfully`,
+      message : `Welcome Back ${getLoginUser.name} ,you are sucessfully logined in. 🤩`,
+     });
+
+     res.status(200).json({
+      status:"Successfully Logined in",
       data:{
-        loginedUser
+        getLoginUser
       }
     })
-    // console.log(loginedUser);
 
 
   }catch(err){
@@ -248,7 +268,6 @@ exports.login = async (req,res,next) =>{
       status:"Failed",
       message : err.message
     })
-     
   }
 }
 exports.getMe = async(req,res,next)=>{
