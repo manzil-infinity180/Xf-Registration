@@ -21,6 +21,9 @@
     "validate": "^5.2.0",
     "validator": "^13.11.0"
   },
+  "engines": {
+    "node": ">=20.11.1"
+  },
   "scripts": {
     "start": "node server.js"
   },
