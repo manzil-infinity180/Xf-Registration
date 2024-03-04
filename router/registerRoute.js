@@ -8,9 +8,10 @@ router.get('/search/:username',registerController.getOtherUserDetail);
 router.post('/verify',registerController.verify);
 
 router.get('/',registerController.getAllRegisterd);
+router.get('/search',registerController.searchPerson);
 router.use(registerController.isAuthenticated);
 
-router.get('/search',registerController.searchPerson);
+
 
 router.get('/skill',registerController.searchBySkill);
 router.get('/find-user-within-radius',registerController.findUserWithinRadius);

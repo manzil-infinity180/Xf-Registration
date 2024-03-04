@@ -97,8 +97,9 @@ try{
 
 exports.searchPerson = async(req,res,next)=>{
   try{
-    const searchedObj = await Register.find({$or : [{ username : req.query.username}, {name: req.query.name},
-    {PostalCode: req.body.PostalCode},{college:req.query.college}]});
+    const searchedObj = await Register.find({$or : [{ username : req.query.username}, {name: req.query.name}
+      ,{college:req.query.college}]});
+      console.log(req.query.username);
     console.log(searchedObj);
     res.status(200).json({
       status:"Success",
@@ -231,7 +232,8 @@ exports.login = async (req,res,next) =>{
       message : `Welcome Back ${loginedUser.name} ,your OTP for verification is ${otp}`,
      })
     res.status(200).json({
-      status:"Successfully OTP Send",
+      status:"Success",
+      message:"OTP Sucessfully sent"
     })
   }catch(err){
     res.status(400).json({
