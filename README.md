@@ -1,5 +1,7 @@
 # Xf-Registration
 
+ - Xf Registration frontend Source Code : https://github.com/manzil-infinity180/Xf-Registration_frontend
+   
  # INTRO
  
  * User can getRegistered and will get notification on their email id
