@@ -1,65 +1,91 @@
 # Xf-Registration
 
- - Xf Registration frontend Source Code : https://github.com/manzil-infinity180/Xf-Registration_frontend
-   
- # INTRO
- 
- * User can getRegistered and will get notification on their email id
+[![GitHub Repository](https://img.shields.io/badge/GitHub-Xf--Registration__frontend-blue?style=flat-square&logo=github)](https://github.com/manzil-infinity180/Xf-Registration_frontend)
+
+## Introduction
+
+Xf-Registration is a comprehensive user registration and management system designed to streamline the onboarding process and enhance user interaction. This project offers a robust set of features for user registration, profile management, and user discovery.
+
+### Key Features
+
+- **User Registration with Email Notification**
+  - Automated email confirmation upon successful registration
+  ```
+  Subject: 'Xf Registration Successfully Completed 🦾'
+  Message: 'Thank you for registering with Xf. You can now explore the platform.'
+  ```
+
+- **Advanced User Search**
+  - Find users based on skills, username, postal code, or college name
+  - Proximity-based search using radius, latitude, and longitude
+
+- **Profile Management**
+  - Update phone number and username
+  - Upload and manage profile photo and background image
+  - Secure image storage using multer package
+
+- **Account Actions**
+  - User registration
+  - Profile updates
+  - Account deletion
+
+- **OAuth Integration**
+  - Seamless authentication with GitHub
+
+For detailed API documentation, please visit our [Postman Documentation](https://documenter.getpostman.com/view/27140962/2s9YeD8D4V).
+
+## Getting Started
+
+### Prerequisites
+
+Ensure you have Node.js and npm installed on your system.
+
+### Installation
+
+1. Clone the repository:
    ```
-    subject : 'Xf Registration Successfully Done 🦾',
-    message : 'Thank You for Xf registration,you can know explore the Xf',
+   git clone https://github.com/manzil-infinity180/Xf-Registration_frontend.git
+   cd Xf-Registration_frontend
    ```
-* User can search the other person via their top skills , username, postal code ,college name and also can find person in range by mentioning the <b> radius,latitude and longitude </b>
-* Having the feature to update their <b> phone number </b> , <b>username</b> and also their <b>profile photo</b> and <b>background image</b> too , we are not storing the image in database we simply storing in our diskStorage thanks to <b> multer package </b> that help to do so.
-* Register,update your details,delete your account,update your phone number,update profile photo & background image , search other person 
 
+2. Install dependencies:
+   ```
+   npm install express nodemailer nodemon passport passport-github validate validator express-session jsonwebtoken mongodb mongoose multer passport-google-oauth crypto-js
+   ```
 
-<b>Documentation</b> - https://documenter.getpostman.com/view/27140962/2s9YeD8D4V
+3. Configure environment variables:
+   - Create a `config.env` file in the root directory
+   - Add necessary environment variables (refer to `config_example`)
 
-# Run Locally 
-```
-Install these all dependencies
-"crypto-js": "^4.2.0",
-    "express": "^4.18.2",
-    "express-session": "^1.17.3",
-    "jsonwebtoken": "^9.0.2",
-    "mongodb": "^6.2.0",
-    "mongoose": "^7.6.3",
-    "multer": "^1.4.5-lts.1",
-    "nodemailer": "^6.9.7",
-    "nodemon": "^3.0.1",
-    "passport": "^0.6.0",
-    "passport-github": "^1.1.0",
-    "passport-google-oauth": "^2.0.0",
-    "passport-google-oauth20": "^2.0.0",
-    "validate": "^5.2.0",
-    "validator": "^13.11.0"
-```
-```
-Here all the dependencies in one goo
-Delete the package.json and package-lock.json
-Do the following commands -
-Setup the config.env file with our own credientials (ref config_example)
-```
-```
-npm install
-```
+4. Start the application:
+   ```
+   npm start
+   ```
 
-```
-npm i express nodemailer nodemon passport passport-github validate validator express express-session jsonwebtoken mongodb mongoose multer passport-google-oauth crypto-js
-```
+## Feature Showcase
 
-# Github OAuth 
-<div style="text-align: center;">
+### GitHub OAuth Authentication
 
- <img width="840" style="center" alt="Screenshot 2023-11-24 at 11 27 40 PM" src="https://github.com/manzil-infinity180/Xf-Registration/assets/119070053/24d34cd0-34d9-46fb-b1e2-dacce1e6e74e">
-<img width="840" style="center" alt="Screenshot 2023-11-24 at 11 28 01 PM" src="https://github.com/manzil-infinity180/Xf-Registration/assets/119070053/f2050239-973a-4e42-90e3-6a0547732603">
-</div>
+![GitHub OAuth Login](https://github.com/manzil-infinity180/Xf-Registration/assets/119070053/24d34cd0-34d9-46fb-b1e2-dacce1e6e74e)
+![GitHub OAuth Authorization](https://github.com/manzil-infinity180/Xf-Registration/assets/119070053/f2050239-973a-4e42-90e3-6a0547732603)
 
-# Register 
-<img width="750" alt="Screenshot 2023-11-24 at 11 54 21 PM" src="https://github.com/manzil-infinity180/Xf-Registration/assets/119070053/a769fe0c-e49d-4285-8cc0-c51e43f369c8">
+### User Registration Interface
 
-# User
-<img width="786" alt="Screenshot 2023-11-24 at 11 53 58 PM" src="https://github.com/manzil-infinity180/Xf-Registration/assets/119070053/7b1fc6e3-829f-49cb-8377-41bdb430844a">
+![User Registration Form](https://github.com/manzil-infinity180/Xf-Registration/assets/119070053/a769fe0c-e49d-4285-8cc0-c51e43f369c8)
 
+### User Profile View
 
+![User Profile Page](https://github.com/manzil-infinity180/Xf-Registration/assets/119070053/7b1fc6e3-829f-49cb-8377-41bdb430844a)
+
+## Contributing
+
+We welcome contributions to the Xf-Registration project. Please feel free to submit issues, fork the repository and send pull requests!
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.
+
+## Acknowledgments
+
+- Thanks to all contributors who have helped shape Xf-Registration
+- Special thanks to the open-source community for the fantastic tools and libraries used in this project
